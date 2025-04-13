@@ -16,23 +16,46 @@
         <form id="add-game-form">
             <label for="game-name">Game Name:</label>
             <input type="text" id="game-name" required>
-
-            <label for="game-genre">Genre:</label>
-            <input type="text" id="game-genre" required>
-
+            <br>
+            <label for="game-designer">Designer:</label>
+            <input type="text" id="game-designer" required>
+            <br>
+            <label for="game-artist">Artist:</label>
+            <input type="text" id="game-artist" required>
+            <br>
+            <label for="game-publisher">Publisher:</label>
+            <input type="text" id="game-publisher" required>
+            <br>
+            <label for="game-year">Year:</label>
+            <input type="number" id="game-year" required>
+            <br>
+            <label for="game-players">Players:</label>
+            <input type="text" id="game-players" required>
+            <br>
+            <label for="game-time">Time:</label>
+            <input type="text" id="game-time" required>
+            <br>
+            <label for="game-difficulty">Difficulty:</label>
+            <input type="text" id="game-difficulty" required>
+            <br>
+            <label for="game-url">URL:</label>
+            <input type="text" id="game-url">
+            <br>
             <label for="game-rating">Rating:</label>
             <input type="number" id="game-rating" min="1" max="10" required>
-
+            <br>
+            <br>
             <button type="submit">Add Game</button>
         </form>
     </div>
 
-    <h2>Your Game List</h2>
-    <div id="game-list">
-    </div>
-
+    <div id="gameList"></div>
+    <br>
+    <br>
+    <label for="importSource">Import Games:</label>
     <input type="file" id="importSource" />
-    
+    <br>
+
     <script src="app.mjs" type="module"></script>
 </body>
 

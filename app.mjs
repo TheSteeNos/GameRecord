@@ -93,5 +93,40 @@ function renderGames() {
     });
 }
 
+document.getElementById('add-game-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const gameTitle = document.getElementById('game-name').value;
+    const gameDesigner = document.getElementById('game-designer').value;
+    const gameArtist = document.getElementById('game-artist').value;
+    const gamePublisher = document.getElementById('game-publisher').value;
+    const gameYear = document.getElementById('game-year').value;
+    const gamePlayers = document.getElementById('game-players').value;
+    const gameTime = document.getElementById('game-time').value;
+    const gameDifficulty = document.getElementById('game-difficulty').value;
+    const gameUrl = document.getElementById('game-url').value;
+    const gameRating = document.getElementById('game-rating').value;
+
+    const newGame = new Game({
+        title: gameTitle,
+        designer: gameDesigner,
+        artist: gameArtist,
+        publisher: gamePublisher,
+        year: gameYear,
+        players: gamePlayers,
+        time: gameTime,
+        difficulty: gameDifficulty,
+        url: gameUrl,
+        playCount: 0,
+        personalRating: gameRating || 5
+    });
+
+    saveGame(newGame);
+    loadGamesToMemory();
+    renderGames();
+
+    document.getElementById('add-game-form').reset();
+});
+
 loadGamesToMemory();
 renderGames();
