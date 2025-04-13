@@ -2,8 +2,20 @@ import Game from './models/game.mjs';
 
 const games = [];
 
+function makeKey(title) {
+    return `game_${title.toLowerCase().trim().replace(/\s+/g, "_")}`;
+}
+
 function saveGame(game) {
-    localStorage.setItem(`game_${game.title}`, JSON.stringify(game));
+    const key = makeKey(game.title);
+    localStorage.setItem(key, JSON.stringify(game));
+    console.log(`Saved game under key: ${key}`);
+}
+
+function deleteGame(title) {
+    const key = makeKey(title);
+    localStorage.removeItem(key);
+    console.log(`Deleted game under key: ${key}`);
 }
 
 function getAllGames() {
@@ -12,7 +24,9 @@ function getAllGames() {
         const key = localStorage.key(i);
         if (key.startsWith("game_")) {
             const data = JSON.parse(localStorage.getItem(key));
-            result.push(new Game(data));
+            const game = new Game(data);
+            game._key = key;
+            result.push(game);
         }
     }
     return result;
@@ -37,7 +51,7 @@ function loadGamesToMemory() {
     storedGames.forEach(game => games.push(game));
 }
 
-document.getElementById("importSource").addEventListener("change", (event) => {
+document.getElementById("importSource")?.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -66,12 +80,23 @@ function renderGames() {
                 <p><strong>Personal Rating:</strong> <span id="ratingDisplay_${index}">${game.personalRating}</span></p>
                 <input type="range" min="0" max="10" value="${game.personalRating}" data-index="${index}" class="rating-slider" />
                 <button data-index="${index}" class="update-playcount-btn">+1 Play</button>
+                <button data-key="${game._key}" class="delete-game-btn">Delete</button>
                 <hr/>
             </div>
         `;
     });
 
     list.innerHTML = html;
+
+    document.querySelectorAll('.delete-game-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const key = e.target.getAttribute('data-key');
+            localStorage.removeItem(key);
+            console.log(`Deleted game with key: ${key}`);
+            loadGamesToMemory();
+            renderGames();
+        });
+    });
 
     document.querySelectorAll(".rating-slider").forEach(slider => {
         slider.addEventListener("input", (e) => {
