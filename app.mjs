@@ -1,6 +1,7 @@
 import Game from './models/game.mjs';
 
 const games = [];
+let currentSort = 'none';
 
 function makeKey(title) {
     return `game_${title.toLowerCase().trim().replace(/\s+/g, "_")}`;
@@ -9,13 +10,11 @@ function makeKey(title) {
 function saveGame(game) {
     const key = makeKey(game.title);
     localStorage.setItem(key, JSON.stringify(game));
-    console.log(`Saved game under key: ${key}`);
 }
 
 function deleteGame(title) {
     const key = makeKey(title);
     localStorage.removeItem(key);
-    console.log(`Deleted game under key: ${key}`);
 }
 
 function getAllGames() {
@@ -24,9 +23,7 @@ function getAllGames() {
         const key = localStorage.key(i);
         if (key.startsWith("game_")) {
             const data = JSON.parse(localStorage.getItem(key));
-            const game = new Game(data);
-            game._key = key;
-            result.push(game);
+            result.push(new Game(data));
         }
     }
     return result;
@@ -62,11 +59,33 @@ document.getElementById("importSource")?.addEventListener("change", (event) => {
     reader.readAsText(file);
 });
 
+document.getElementById('sort-by')?.addEventListener('change', (e) => {
+    currentSort = e.target.value;
+    renderGames();
+});
+
 function renderGames() {
     const list = document.getElementById("gameList");
     let html = "";
 
-    games.forEach((game, index) => {
+    let sortedGames = [...games];
+
+    switch (currentSort) {
+        case 'players':
+            sortedGames.sort((a, b) => parseInt(a.players) - parseInt(b.players));
+            break;
+        case 'rating':
+            sortedGames.sort((a, b) => b.personalRating - a.personalRating);
+            break;
+        case 'difficulty':
+            sortedGames.sort((a, b) => a.difficulty.localeCompare(b.difficulty));
+            break;
+        case 'playCount':
+            sortedGames.sort((a, b) => b.playCount - a.playCount);
+            break;
+    }
+
+    sortedGames.forEach((game, index) => {
         html += `
             <div class="game">
                 <h2>${game.title} (${game.year})</h2>
@@ -80,7 +99,7 @@ function renderGames() {
                 <p><strong>Personal Rating:</strong> <span id="ratingDisplay_${index}">${game.personalRating}</span></p>
                 <input type="range" min="0" max="10" value="${game.personalRating}" data-index="${index}" class="rating-slider" />
                 <button data-index="${index}" class="update-playcount-btn">+1 Play</button>
-                <button data-key="${game._key}" class="delete-game-btn">Delete</button>
+                <button data-title="${game.title}" class="delete-game-btn">Delete</button>
                 <hr/>
             </div>
         `;
@@ -90,9 +109,8 @@ function renderGames() {
 
     document.querySelectorAll('.delete-game-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            const key = e.target.getAttribute('data-key');
-            localStorage.removeItem(key);
-            console.log(`Deleted game with key: ${key}`);
+            const title = e.target.getAttribute('data-title');
+            deleteGame(title);
             loadGamesToMemory();
             renderGames();
         });
@@ -120,7 +138,7 @@ function renderGames() {
 
 document.getElementById('add-game-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    
+
     const gameTitle = document.getElementById('game-name').value;
     const gameDesigner = document.getElementById('game-designer').value;
     const gameArtist = document.getElementById('game-artist').value;

@@ -43,19 +43,27 @@
             <br>
             <label for="game-rating">Rating:</label>
             <input type="number" id="game-rating" min="1" max="10" required>
-            <br>
-            <br>
+            <br><br>
             <button type="submit">Add Game</button>
         </form>
+    </div>
+    <br>
+    <div class="sorting-controls">
+        <label for="sort-by">Sort by:</label>
+        <select id="sort-by">
+            <option value="none">None</option>
+            <option value="players">Players</option>
+            <option value="rating">Rating</option>
+            <option value="difficulty">Difficulty</option>
+            <option value="playCount">Play Count</option>
+        </select>
     </div>
 
     <div id="gameList"></div>
     <br>
-    <br>
     <label for="importSource">Import Games:</label>
     <input type="file" id="importSource" />
-    <br>
-
+    
     <script src="app.mjs" type="module"></script>
 </body>
 
