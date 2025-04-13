@@ -4,14 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App title</title>
+    <title>Game Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <input type="file" id="importSource" />
-    <div id="gameList"></div>
+    <h1>Game Tracker</h1>
 
+    <div class="add-game">
+        <h2>Add a New Game</h2>
+        <form id="add-game-form">
+            <label for="game-name">Game Name:</label>
+            <input type="text" id="game-name" required>
+
+            <label for="game-genre">Genre:</label>
+            <input type="text" id="game-genre" required>
+
+            <label for="game-rating">Rating:</label>
+            <input type="number" id="game-rating" min="1" max="10" required>
+
+            <button type="submit">Add Game</button>
+        </form>
+    </div>
+
+    <h2>Your Game List</h2>
+    <div id="game-list">
+    </div>
+
+    <input type="file" id="importSource" />
+    
     <script src="app.mjs" type="module"></script>
 </body>
 
